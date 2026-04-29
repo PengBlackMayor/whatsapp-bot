@@ -9,6 +9,21 @@ dotenv.config();
 
 // 🔥 INIT DB
 const db = await initDB();
+// 🔥 AUTO SEED PRODUCTS
+const existing = await db.all("SELECT * FROM products");
+
+if (existing.length === 0) {
+  console.log("🌱 Seeding products...");
+
+  await db.run(`
+    INSERT INTO products (name, price, description) VALUES
+    ('Denim Jacket', 60, 'Stylish denim jacket'),
+    ('Black Hoodie', 40, 'Comfortable hoodie'),
+    ('White Shirt', 25, 'Classic white shirt')
+  `);
+
+  console.log("✅ Products seeded");
+}
 
 // 🔥 OPENAI
 const openai = new OpenAI({
